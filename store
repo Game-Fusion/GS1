@@ -1,0 +1,35 @@
+term.setBackgroundColour(colours.blue)
+term.clear()
+term.setCursorPos(1,1)
+print("|================================================|")
+print("|     Welcome to the GameStation Store!          |")
+print("|================================================|")
+print("")
+print("               What's Hot:")
+print("")
+print("                 1. TRON")
+print("                 2. Laserblast")
+print("                 3. Fish Simulator")
+print("")
+print("  To download a game, press the number beside it  ")
+while true do
+local event, key = os.pullEvent("key")
+if key == keys.one then
+print("Installing TRON...")
+shell.run("pastebin get W22xyWes TRON")
+shell.run("move TRON GS/TRON")
+print("TRON Installed!")
+else if key == keys.two then
+print("Installing Laserblast...")
+shell.run("pastebin get RkMrkGYw Laserblast")
+shell.run("move Laserblast GS/Laserblast")
+print("Laserblast installed!")
+else if key == keys.three then
+print("Installing Fish Simulator...")
+shell.run("pastebin get 5x9Uu1pr FishSimulator")
+shell.run("move FishSimulator GS/FishSimulator")
+print("Fish Simulator Installed!")
+end
+end
+end
+end
