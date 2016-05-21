@@ -1,6 +1,17 @@
+local function get(code, path)
+	local r = http.get("http://pastebin.com/raw.php?i=" .. code)
+	if not r then
+		return false
+	end
+	local f = fs.open(path, "w")
+	f.write(r.readAll())
+	f.close()
+	r.close()
+	return true
+end
 term.setBackgroundColour(colours.blue)
 term.clear()
-term.setCursorPos(1,1)
+term.setCursorPos(1, 1)
 print("|================================================|")
 print("|     Welcome to the GameStation Store!          |")
 print("|================================================|")
@@ -13,23 +24,21 @@ print("                 3. Fish Simulator")
 print("")
 print("  To download a game, press the number beside it  ")
 while true do
-local event, key = os.pullEvent("key")
-if key == keys.one then
-print("Installing TRON...")
-shell.run("pastebin get W22xyWes TRON")
-shell.run("move TRON GS/TRON")
-print("TRON Installed!")
-else if key == keys.two then
-print("Installing Laserblast...")
-shell.run("pastebin get RkMrkGYw Laserblast")
-shell.run("move Laserblast GS/Laserblast")
-print("Laserblast installed!")
-else if key == keys.three then
-print("Installing Fish Simulator...")
-shell.run("pastebin get 5x9Uu1pr FishSimulator")
-shell.run("move FishSimulator GS/FishSimulator")
-print("Fish Simulator Installed!")
-end
-end
-end
+	local event, key = os.pullEvent("key")
+	if key == keys.one then
+		print("Installing TRON...")
+		if get("W22xyWes", "GS/TRON") then
+			print("TRON Installed!")
+		end
+	elseif key == keys.two then
+		print("Installing Laserblast...")
+		if get("RkMrkGYw", "GS/Laserblast") then
+			print("Laserblast installed!")
+		end
+	elseif key == keys.three then
+		print("Installing Fish Simulator...")
+		if get("5x9Uu1pr", "GS/FishSimulator") then
+			print("Fish Simulator Installed!")
+		end
+	end
 end
