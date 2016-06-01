@@ -1,3 +1,5 @@
+# Support for the GameStation™ 1 has been terminated.
+
 # GS1
 The official GameStation™ 1 Repository on Github.
 
