@@ -1,0 +1,135 @@
+function center(y,string)
+  local w,h = term.getSize()
+  local x = (w/2)-(#string/2)
+  term.setCursorPos(x,y)
+  print(string)
+end
+
+term.setBackgroundColour(colours.black)
+screen = "menu"
+term.clear()
+function menu()
+term.clear()
+term.setCursorPos(18,4)
+term.setTextColour(colours.yellow)
+write("Game")
+term.setTextColour(colours.lime)
+write("Station")
+term.setTextColour(colours.blue)
+center(6,"Programs")
+term.setTextColour(colors.red)
+center(7,"Settings")
+term.setTextColour(colours.green)
+center(8,"Install")
+term.setTextColour(colours.white)
+center(9,"Back to SmartPlay")
+end menu()
+
+while true do
+  os.startTimer(0.2)
+  event,a,b,c,d = os.pullEvent()
+  if event == "mouse_click" then
+    if screen == "menu" then
+     if c == 9 then shell.run("/SP3/Desktop")
+      if c == 8 then screen = "install"
+        term.clear()
+        term.setTextColor(colors.green)
+        center(5,"Install from disk")
+        center(19,"Space to exit")
+        while true do
+          os.startTimer(0.3)
+          event,a,b,c,d = os.pullEvent()
+          if event == "mouse_click" then
+            if c == 4 then
+              if (fs.exists("disk")) then
+                term.clear()
+                term.setCursorPos(1,1)
+                disk = fs.list("disk")
+                for i=1,#disk do
+                  if fs.exists("SP3/GS1/Games/"..disk[i]) then
+                    ifset(colors.red)
+                    print("Failed to install "..disk[i]..": Exists")
+                  else
+                    ifset(colors.green)
+                    fs.copy("disk/"..disk[i],"SP3/GS1/Games/"..disk[i])
+                    print("Installed "..disk[i])
+                  end
+                  ifset(colors.green)
+                  term.setCursorPos(1,19)
+                  write("Space to exit")
+                end
+              else
+                term.clear()
+                term.setCursorPos(1,1)
+                ifset(colors.red)
+                print("Please insert disk")
+                ifset(colors.green)
+                term.setCursorPos(1,19)
+                write("Space to exit")
+              end
+            end
+          end
+          if event == "key" then
+            if a == 57 then
+              term.clear()
+              screen = "menu"
+              menu()
+              break
+            end
+          end
+        end
+      end
+      if c == 6 then
+        scroll = 0
+        term.clear()
+        term.setCursorPos(1,1)
+        term.setTextColor(colors.red)
+        screen = "programs"
+        programs = fs.list("SP3/GS1/Games")
+        while true do
+          programs = fs.list("SP3/GS1/Games")
+          term.setCursorPos(1,1)
+          term.clear()
+          for i=1,#programs do
+            term.setTextColor(colors.red)
+            term.setCursorPos(1,i-scroll)
+            print(programs[i])
+          end
+          if #programs == 0 then
+            term.setTextColor(colors.white)
+            term.setCursorPos(1,1)
+            print("You have no apps.")
+          end
+          term.setCursorPos(1,19)
+          term.setTextColor(colors.green)
+          write("Click a program to run it. Space to exit.")
+          os.startTimer(0.3)
+          event,a,b,c,d = os.pullEvent()
+          if (event == "key" and a == 57) then
+            term.clear()
+            screen = "menu"
+            menu()
+            break
+          end
+          if event == "mouse_scroll" then
+            scroll = scroll + a
+            if scroll > 0 then
+              scroll = 0
+            end
+          end
+          if event == "mouse_click" then
+            if c <= #programs then
+              c = c - scroll
+              print(programs[c])
+              term.setTextColor(colors.white)
+              term.clear()
+              term.setCursorPos(1,1)
+              shell.run("SP3/GS1/Games/"..programs[c])
+            end
+          end
+        end
+      end
+    end
+  end
+end
+end
